@@ -162,6 +162,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ResourceFiles\8INF259 Travail 3.pdf" />
+    <None Include="ResourceFiles\Data\planetes_100.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ResourceFiles\Data\Planetes_100.txt" />
+    <Text Include="ResourceFiles\Data\Planetes_20.txt" />
+    <Text Include="ResourceFiles\Data\Transactions_Complexes.txt" />
+    <Text Include="ResourceFiles\Data\Transactions_Guerres.txt" />
+    <Text Include="ResourceFiles\Data\Transactions_Simples.txt" />
+    <Text Include="ResourceFiles\Data\Vaisseaux_4.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

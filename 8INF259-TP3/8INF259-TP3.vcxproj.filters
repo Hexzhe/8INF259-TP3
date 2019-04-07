@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Data">
+      <UniqueIdentifier>{78fa624d-4adc-40ce-998d-87ff27a858f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -26,5 +29,33 @@
     <ClCompile Include="8INF259-TP3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ResourceFiles\8INF259 Travail 3.pdf">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ResourceFiles\Data\planetes_100.pdf">
+      <Filter>Resource Files\Data</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ResourceFiles\Data\Planetes_20.txt">
+      <Filter>Resource Files\Data</Filter>
+    </Text>
+    <Text Include="ResourceFiles\Data\Planetes_100.txt">
+      <Filter>Resource Files\Data</Filter>
+    </Text>
+    <Text Include="ResourceFiles\Data\Transactions_Complexes.txt">
+      <Filter>Resource Files\Data</Filter>
+    </Text>
+    <Text Include="ResourceFiles\Data\Transactions_Guerres.txt">
+      <Filter>Resource Files\Data</Filter>
+    </Text>
+    <Text Include="ResourceFiles\Data\Transactions_Simples.txt">
+      <Filter>Resource Files\Data</Filter>
+    </Text>
+    <Text Include="ResourceFiles\Data\Vaisseaux_4.txt">
+      <Filter>Resource Files\Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>
