@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "GraphNode.h"
 
 template<class T>
 class Graph
@@ -23,7 +24,7 @@ Graph<T>::Graph()
 template<class T>
 Graph<T>::Graph(std::vector<T>& items)
 {
-	//TODO: Initialize the heap with the items provided
+	//TODO: Initialize the graph with the items provided
 }
 
 template<class T>
