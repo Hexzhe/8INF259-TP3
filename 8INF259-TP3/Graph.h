@@ -1,40 +1,58 @@
 #pragma once
 #include <vector>
-#include "GraphNode.h"
 
 template<class T>
 class Graph
 {
 public:
 	Graph();
-	Graph(std::vector<T>& items);
+	Graph(const std::vector<T>& nodes);
 	~Graph();
 
-	void Clear();
+	int* edges; //< 0 value means none; >= 0 values means there is an edge and the value is its weight
+	std::vector<T>* nodes;
 
-	//TODO: Check how do we implement a graph and do it
+	void AddEdge(int indexA, int indexB, int weight, bool undirected);
+	void RemoveEdge(int indexA, int indexB, bool undirected);
 };
 
 template<class T>
 Graph<T>::Graph()
 {
-	//TODO: Initialize member values
+	//TODO: Shouldn't be used but still
 }
 
 template<class T>
-Graph<T>::Graph(std::vector<T>& items)
+Graph<T>::Graph(const std::vector<T>& nodes)
 {
-	//TODO: Initialize the graph with the items provided
+	this->nodes = nodes;
+	this->edges = new int[this->nodes->size()][this->nodes->size()];
+
+	for (int y = 0; y < (sizeof(this->edges)); y++)
+		for (int x = 0; x < (sizeof(this->edges[0])); x++)
+			this->edges[x][y] = -1; //Default to -1, meaning there is no edge
 }
 
 template<class T>
 Graph<T>::~Graph()
 {
-	Clear();
+	delete edges, nodes;
 }
 
 template<class T>
-void Graph<T>::Clear()
+void Graph<T>::AddEdge(int indexA, int indexB, int weight, bool undirected)
 {
-	//TODO: Remove all items, delete pointers and stuff
+	this->edges[indexA][indexB] = weight;
+
+	if (undirected)
+		this->edges[indexB][indexA] = weight;
+}
+
+template<class T>
+void Graph<T>::RemoveEdge(int indexA, int indexB, bool undirected)
+{
+	this->edges[indexA][indexB] = -1;
+
+	if (undirected)
+		this->edges[indexB][indexA] = -1;
 }

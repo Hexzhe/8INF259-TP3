@@ -22,4 +22,6 @@ public:
 private:
 	Graph<Planet> planets;
 	std::vector<Spaceship> spaceships;
+
+	int GetPlanetIndex(std::string);
 };

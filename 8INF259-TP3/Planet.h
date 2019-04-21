@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include "Point.h"
 
 class Planet
 {
@@ -10,7 +9,7 @@ public:
 	~Planet() {};
 
 	std::string name;
-	Point location;
+	std::pair<double, double> location;
 	int populationCount;
 	std::string allianceName;
 	double fuelPrice;

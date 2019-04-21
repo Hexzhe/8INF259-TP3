@@ -21,29 +21,35 @@ void SpaceGame::LoadSpaceships(std::string path)
 
 void SpaceGame::DoesPathExist(std::string planetAName, std::string planetBName, std::string spaceshipName)
 {
-	//TODO: Using this->planets functions, check if a path exist between planetA and planetB for a specific spaceship
+	//TODO: Using this->planets functions, check if a path exist between planetA and planetB for a specific spaceship. In theory there is almost always a direct path between each planet exept in case of conflict, but considering the fuel capacity of the spaceship we may have to jump from planet to planet to get fuel.
 	//Don't forget output
 }
 
 void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetAName, std::string planetBName)
 {
-	//TODO: For a specific spaceship, get the shortest path (least distance between planets) between planetA and planetB
+	//TODO: For a specific spaceship, get the shortest path (least distance between planets, considering spaceship's fuel capacity) between planetA and planetB
 	//Don't forget output
 }
 
 void SpaceGame::GetLeastExpensivePath(std::string spaceshipName, std::string planetAName, std::string planetBName)
 {
-	//TODO: For a specific spaceship, get the least expensive path (least fuel cost) between planetA and planetB
+	//TODO: For a specific spaceship, get the least expensive path (least fuel cost, considering spaceship's fuel capacity) between planetA and planetB
 	//Don't forget output
 }
 
 void SpaceGame::AddConflict(std::string allianceA, std::string allianceB)
 {
-	//TODO: For every planets of allianceA, remove their direct link with every planets of allianceB. Do the same for every planets of allianceB.
+	//TODO: For every planets of allianceA, remove their direct link with every planets of allianceB. Since the graph (this->planets) is undirected, we don't have to do it in both ways. (use planets.RemoveEdge(int, int, true), where ints are planet's indexes which you can find with this->GetPlanetIndex(std::string)))
 	//Don't forget output
 }
 
 void SpaceGame::DisplayCurrentGameStatus()
 {
-	//TODO: Display everything; planets /w details, spaceships /w details and active conflicts
+	//TODO: Display everything; planets /w details, spaceships /w details and active conflicts ()
+}
+
+int SpaceGame::GetPlanetIndex(std::string planetName)
+{
+	//TODO: Using a planet's name, find it's first occurence in this->planets.nodes
+	return 0;
 }
