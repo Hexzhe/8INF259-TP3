@@ -12,8 +12,8 @@ public:
 	int* edges; //< 0 value means none; >= 0 values means there is an edge and the value is its weight
 	std::vector<T>* nodes;
 
-	void AddEdge(int indexA, int indexB, int weight, bool undirected);
-	void RemoveEdge(int indexA, int indexB, bool undirected);
+	void AddEdge(int indexA, int indexB, int weight);
+	void RemoveEdge(int indexA, int indexB);
 };
 
 template<class T>
@@ -40,19 +40,15 @@ Graph<T>::~Graph()
 }
 
 template<class T>
-void Graph<T>::AddEdge(int indexA, int indexB, int weight, bool undirected)
+void Graph<T>::AddEdge(int indexA, int indexB, int weight)
 {
 	this->edges[indexA][indexB] = weight;
-
-	if (undirected)
-		this->edges[indexB][indexA] = weight;
+	this->edges[indexB][indexA] = weight;
 }
 
 template<class T>
-void Graph<T>::RemoveEdge(int indexA, int indexB, bool undirected)
+void Graph<T>::RemoveEdge(int indexA, int indexB)
 {
 	this->edges[indexA][indexB] = -1;
-
-	if (undirected)
-		this->edges[indexB][indexA] = -1;
+	this->edges[indexB][indexA] = -1;
 }

@@ -9,16 +9,100 @@
 
 #include "pch.h"
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include "SpaceGame.h"
+
+void ProcessTransactionLine(std::string line, SpaceGame& game)
+{
+	if (line.length() == 0)
+		return;
+
+	std::string transaction[4]; //max one instruction + 3 params, no spaces
+	std::istringstream iss(line);
+	for (int i = 0; iss.good() && i < 4; i++)
+		iss >> transaction[i];
+
+	if (transaction[0] == "#P")
+		game.LoadPlanets(transaction[1]);
+	else if (transaction[0] == "#V")
+		game.LoadSpaceships(transaction[1]);
+	else if (transaction[0] == "?1")
+		game.DoesPathExist(transaction[1], transaction[2], transaction[3]);
+	else if (transaction[0] == "?2")
+		game.GetShortestPath(transaction[1], transaction[2], transaction[3]);
+	else if (transaction[0] == "?3")
+		game.GetLeastExpensivePath(transaction[1], transaction[2], transaction[3]);
+	else if (transaction[0] == "/")
+		game.AddConflict(transaction[1], transaction[2]);
+	else if (transaction[0] == "&")
+		game.DisplayCurrentGameStatus();
+	else
+		std::cout << "Unknown transaction" << std::endl;
+}
 
 int main()
-{
-	bool exit = false;
-	while (!exit)
+{ //TODO: Clean up and split in functions maybe
+	SpaceGame* game = nullptr;
+	while (true)
 	{
-		//TODO: Menu to choose between file-mode or manual-mode
-		//TODO: Implement file-mode
-		//TODO: Implement manual-mode
-		//TODO: Handle exit
+		delete game;
+		game = new SpaceGame();
+
+		std::cout << "Menu\n  1- File mode\n  2- Manual mode\n  ?- Exit\n\nChoice: " << std::flush;
+		int menuChoice;
+		std::cin >> menuChoice;
+
+		if (menuChoice == 1)
+		{
+			std::cout << "\nFile mode" << std::endl;
+
+			std::cout << "Transaction file path: " << std::flush;
+			std::string path;
+			std::cin >> path;
+			
+			std::ifstream file(path);
+			if (file.fail())
+			{
+				std::cout << "File not found at \"" << path << "\"" << std::endl;
+				continue;
+			}
+
+			std::string line;
+			std::cout << "Processing transactions..." << std::endl;
+			while (getline(file, line))
+				ProcessTransactionLine(line, *game);
+
+			file.close();
+			std::cout << "Game Over\n" << std::endl;
+		}
+		else if (menuChoice == 2)
+		{
+			std::cout << "\nManual mode" << std::endl;
+
+			while (true)
+			{
+				std::cout << "Enter transaction: " << std::flush;
+				std::string line;
+				std::cin >> line;
+
+				if (line == "qqq"
+					|| line == "q"
+					|| line == "exit"
+					|| line == "done"
+					|| line == "quit"
+					|| line == "fuckoff")
+
+				{
+					std::cout << "Game Over\n" << std::endl;
+				}
+
+				ProcessTransactionLine(line, *game);
+			}
+		}
+		else
+			break;
 	}
 
 	return 0;
