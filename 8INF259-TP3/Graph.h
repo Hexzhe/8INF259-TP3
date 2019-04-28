@@ -9,8 +9,8 @@ public:
 	Graph(const std::vector<T>& nodes);
 	~Graph();
 
-	int* edges; //< 0 value means none; >= 0 values means there is an edge and the value is its weight
-	std::vector<T>* nodes;
+	int* edges = nullptr; //< 0 value means none; >= 0 values means there is an edge and the value is its weight
+	std::vector<T>* nodes = nullptr;
 
 	void AddEdge(int indexA, int indexB, int weight);
 	void RemoveEdge(int indexA, int indexB);

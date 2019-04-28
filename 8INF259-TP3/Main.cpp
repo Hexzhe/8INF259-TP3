@@ -53,6 +53,7 @@ int main()
 		std::cout << "Menu\n  1- File mode\n  2- Manual mode\n  ?- Exit\n\nChoice: " << std::flush;
 		int menuChoice;
 		std::cin >> menuChoice;
+		std::cin.clear(); std::cin.ignore(INT_MAX, '\n');
 
 		if (menuChoice == 1)
 		{
@@ -61,6 +62,7 @@ int main()
 			std::cout << "Transaction file path: " << std::flush;
 			std::string path;
 			std::cin >> path;
+			std::cin.clear(); std::cin.ignore(INT_MAX, '\n');
 			
 			std::ifstream file(path);
 			if (file.fail())
@@ -85,7 +87,7 @@ int main()
 			{
 				std::cout << "Enter transaction: " << std::flush;
 				std::string line;
-				std::cin >> line;
+				std::getline(std::cin, line);
 
 				if (line == "qqq"
 					|| line == "q"
@@ -96,6 +98,7 @@ int main()
 
 				{
 					std::cout << "Game Over\n" << std::endl;
+					break;
 				}
 
 				ProcessTransactionLine(line, *game);
