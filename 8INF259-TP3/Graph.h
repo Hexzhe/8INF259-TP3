@@ -6,49 +6,65 @@ class Graph
 {
 public:
 	Graph();
-	Graph(const std::vector<T>& nodes);
+	Graph(std::vector<T>& nodes);
 	~Graph();
 
-	int* edges = nullptr; //< 0 value means none; >= 0 values means there is an edge and the value is its weight
+	int** adj = nullptr; //< 0 value means none; >= 0 values means there is an edge and the value is its weight
 	std::vector<T>* nodes = nullptr;
 
 	void AddEdge(int indexA, int indexB, int weight);
 	void RemoveEdge(int indexA, int indexB);
+	void PrintAdj();
 };
 
 template<class T>
 Graph<T>::Graph()
 {
-	//TODO: Shouldn't be used but still
+	//TODO: Shouldn't be used, but still
 }
 
 template<class T>
-Graph<T>::Graph(const std::vector<T>& nodes)
+Graph<T>::Graph(std::vector<T>& nodes)
 {
-	this->nodes = nodes;
-	this->edges = new int[this->nodes->size()][this->nodes->size()];
+	int V = nodes.size();
 
-	for (int y = 0; y < (sizeof(this->edges)); y++)
-		for (int x = 0; x < (sizeof(this->edges[0])); x++)
-			this->edges[x][y] = -1; //Default to -1, meaning there is no edge
+	this->nodes = &nodes;
+	this->adj = new int* [V];
+
+	for (int i = 0; i < V; i++)
+	{
+		this->adj[i] = new int[this->nodes->size()];
+		memset(this->adj[i], -1, V*sizeof(int)); //TODO: What should we initialize the edges weight to?
+	}
 }
 
 template<class T>
 Graph<T>::~Graph()
 {
-	delete edges, nodes;
+	delete adj, nodes;
 }
 
 template<class T>
 void Graph<T>::AddEdge(int indexA, int indexB, int weight)
 {
-	this->edges[indexA][indexB] = weight;
-	this->edges[indexB][indexA] = weight;
+	this->adj[indexA][indexB] = weight;
+	this->adj[indexB][indexA] = weight;
 }
 
 template<class T>
 void Graph<T>::RemoveEdge(int indexA, int indexB)
 {
-	this->edges[indexA][indexB] = -1;
-	this->edges[indexB][indexA] = -1;
+	this->adj[indexA][indexB] = -1;
+	this->adj[indexB][indexA] = -1;
+}
+
+template<class T>
+void Graph<T>::PrintAdj()
+{
+	for (int u = 0; u < this->nodes->size(); u++) //TODO: This is copied from https://www.geeksforgeeks.org/create-dynamic-2d-array-inside-class-c/ but the index vars are shit. Figure it out and replace them by x/y.
+	{
+		for (int v = 0; v < this->nodes->size(); v++)
+			std::cout << this->adj[u][v] << " ";
+		std::cout << std::endl;
+	}
 }

@@ -3,15 +3,44 @@
 
 SpaceGame::SpaceGame()
 {
-	this->planets = Graph<Planet>();
-	this->spaceships = std::vector<Spaceship>();
+	//TODO: Should we do something here? this->planets and this->spaceships are both initialized in LoadPlanets() and LoadSpaceships().
 }
 
 void SpaceGame::LoadPlanets(std::string path)
 {
-	//TODO: Load planets from path into a Planet object, then add them to this->planets. I think that at the beginning, every planets are linked until there is a war between their nations, so keep that in mind when building the heap.
-	//Don't forget output
-	std::cout << "    LoadPlanets " << path << std::endl; //Debug
+	std::ifstream file(path);
+	if (file.fail())
+	{
+		std::cout << "    Couldn't open \"" << path << "\"" << std::endl;
+		return;
+	}
+
+	std::string line;
+	std::vector<Planet>* tmpPlanets = new std::vector<Planet>();
+
+	std::cout << "    Loading planets..." << std::endl;
+	while (getline(file, line))
+	{
+		if (line.length() == 0)
+			continue;
+
+		Planet* planet = new Planet();
+		double x, y;
+
+		std::istringstream iss(line);
+		iss >> planet->name >> x >> y >> planet->populationCount >> planet->allianceName >> planet->fuelPrice;
+		planet->location = std::pair<double, double>(x, y);
+		iss.clear(); iss.ignore(INT_MAX, '\n');
+
+		tmpPlanets->push_back(*planet);
+	}
+
+	this->planets = new Graph<Planet>(*tmpPlanets);
+	file.close();
+
+	std::cout << "Done! " << this->planets->nodes->size() << " planet(s) loaded" << std::endl;
+
+	this->planets->PrintAdj();
 }
 
 void SpaceGame::LoadSpaceships(std::string path)
@@ -19,6 +48,8 @@ void SpaceGame::LoadSpaceships(std::string path)
 	//TODO: Load spaceships from path into a Spaceshil object, then add them to this->spaceships
 	//Don't forget output
 	std::cout << "    LoadSpaceships " << path << std::endl; //Debug
+
+
 }
 
 void SpaceGame::DoesPathExist(std::string planetAName, std::string planetBName, std::string spaceshipName)

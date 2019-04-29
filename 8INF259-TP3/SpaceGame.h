@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 class SpaceGame
 {
@@ -21,8 +23,8 @@ public:
 	void DisplayCurrentGameStatus();
 
 private:
-	Graph<Planet> planets;
-	std::vector<Spaceship> spaceships;
+	Graph<Planet>* planets = nullptr;
+	std::vector<Spaceship>* spaceships = nullptr;
 
 	int GetPlanetIndex(std::string);
 };

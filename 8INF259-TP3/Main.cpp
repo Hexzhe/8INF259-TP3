@@ -43,7 +43,7 @@ void ProcessTransactionLine(std::string line, SpaceGame& game)
 }
 
 int main()
-{ //TODO: Clean up and split in functions maybe
+{
 	SpaceGame* game = nullptr;
 	while (true)
 	{
@@ -55,7 +55,7 @@ int main()
 		std::cin >> menuChoice;
 		std::cin.clear(); std::cin.ignore(INT_MAX, '\n');
 
-		if (menuChoice == 1)
+		if (menuChoice == 1) //TODO: split in functions maybe
 		{
 			std::cout << "\nFile mode" << std::endl;
 
@@ -67,7 +67,7 @@ int main()
 			std::ifstream file(path);
 			if (file.fail())
 			{
-				std::cout << "File not found at \"" << path << "\"" << std::endl;
+				std::cout << "Couldn't open \"" << path << "\"" << std::endl;
 				continue;
 			}
 
