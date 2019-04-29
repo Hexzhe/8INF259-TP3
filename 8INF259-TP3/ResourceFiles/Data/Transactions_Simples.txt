@@ -1,5 +1,5 @@
-#P Planetes_20.txt
-#V Vaisseaux_4.txt
+#P ResourceFiles/Data/Planetes_20.txt
+#V ResourceFiles/Data/Vaisseaux_4.txt
 &
 ?1 SUPP-ID75-P Delta_7 Delta_18
 ?2 SUPP-ID75-P Delta_7 Delta_18

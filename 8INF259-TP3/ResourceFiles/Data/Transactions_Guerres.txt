@@ -1,5 +1,5 @@
-#P Planetes_100.txt
-#V Vaisseaux_4.txt
+#P ResourceFiles/Data/Planetes_100.txt
+#V ResourceFiles/Data/Vaisseaux_4.txt
 &
 ?1 SUPP-ID75-P Beta_8 Epsilon_Beta_10
 ?2 SUPP-ID75-P Beta_8 Epsilon_Beta_10
