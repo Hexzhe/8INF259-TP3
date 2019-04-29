@@ -108,5 +108,6 @@ int main()
 			break;
 	}
 
+	delete game;
 	return 0;
 }
