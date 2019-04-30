@@ -34,13 +34,26 @@ void SpaceGame::LoadPlanets(std::string path)
 
 		tmpPlanets->push_back(*planet);
 	}
-
-	this->planets = new Graph<Planet>(*tmpPlanets);
 	file.close();
 
-	std::cout << "Done! " << this->planets->nodes->size() << " planet(s) loaded" << std::endl;
+	this->planets = new Graph<Planet>(*tmpPlanets);
 
-	this->planets->PrintAdj();
+	for (int i = 0; i < planets->nodes->size(); i++) //Setup edges
+	{
+		for (int j = 0; j < this->planets->nodes->size(); j++)
+		{
+			if (i == j) //Remove self-referencing edges
+			{
+				this->planets->RemoveEdge(i, j);
+				continue;
+			}
+
+			double distance = this->GetDistance((*(this->planets->nodes))[i].location, (*(this->planets->nodes))[j].location); //Edge weight is the distance between the two planets
+			this->planets->AddEdge(i, j, distance);
+		}
+	}
+
+	std::cout << "Done! " << this->planets->nodes->size() << " planet(s) loaded" << std::endl;
 }
 
 void SpaceGame::LoadSpaceships(std::string path)
@@ -50,6 +63,34 @@ void SpaceGame::LoadSpaceships(std::string path)
 	std::cout << "    LoadSpaceships " << path << std::endl; //Debug
 
 
+
+
+	std::ifstream file(path);
+	if (file.fail())
+	{
+		std::cout << "    Couldn't open \"" << path << "\"" << std::endl;
+		return;
+	}
+
+	std::string line;
+
+	std::cout << "    Loading spaceships..." << std::endl;
+	while (getline(file, line))
+	{
+		if (line.length() == 0)
+			continue;
+
+		Spaceship* spaceship = new Spaceship();
+
+		std::istringstream iss(line);
+		iss >> spaceship->name >> spaceship->fuelCapacity;
+		iss.clear(); iss.ignore(INT_MAX, '\n');
+
+		this->spaceships->push_back(*spaceship);
+	}
+	file.close();
+
+	std::cout << "Done! " << this->spaceships->size() << " spaceship(s) loaded" << std::endl;
 }
 
 void SpaceGame::DoesPathExist(std::string planetAName, std::string planetBName, std::string spaceshipName)
@@ -80,14 +121,29 @@ void SpaceGame::AddConflict(std::string allianceA, std::string allianceB)
 	std::cout << "    AddConflict\n        allianceA: " << allianceA << "\n        allianceB: " << allianceB << std::endl; //Debug
 }
 
-void SpaceGame::DisplayCurrentGameStatus()
+void SpaceGame::DisplayCurrentGameState()
 {
 	//TODO: Display everything; planets /w details, spaceships /w details and active conflicts ()
-	std::cout << "    DisplayCurrentGameStatus" << std::endl; //Debug
+	std::cout << "    Loaded spaceship(s):" << std::endl;
+	//TODO: Display loaded spaceships with details
+
+	std::cout << "    Loaded planet(s):" << std::endl;
+	//TODO: Display loaded planets with details
+
+	std::cout << "    Active conflict(s):" << std::endl;
+	//TODO: Display a list of active conflicts. For now there is no way to keep track of conflicts besite the adjMatrix so maybe we should keep the names of the alliances somewhere when we create a new conflict.
+
+	std::cout << "    Planets adjacency matrix:" << std::endl; //TODO: Remove? Too much? Usefull for debug at least.
+	this->planets->PrintAdj();
 }
 
 int SpaceGame::GetPlanetIndex(std::string planetName)
 {
 	//TODO: Using a planet's name, find it's first occurence in this->planets.nodes
 	return 0;
+}
+
+double SpaceGame::GetDistance(std::pair<double, double> a, std::pair<double, double> b)
+{
+	return round(sqrt(pow(b.first - a.first, 2) + pow(b.second - a.second, 2)) * 100) / 100;
 }

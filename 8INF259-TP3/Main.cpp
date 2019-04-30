@@ -37,7 +37,7 @@ void ProcessTransactionLine(std::string line, SpaceGame& game)
 	else if (transaction[0] == "/")
 		game.AddConflict(transaction[1], transaction[2]);
 	else if (transaction[0] == "&")
-		game.DisplayCurrentGameStatus();
+		game.DisplayCurrentGameState();
 	else
 		std::cout << "Unknown transaction" << std::endl;
 }

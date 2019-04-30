@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 
 class SpaceGame
 {
@@ -20,11 +21,12 @@ public:
 	void GetShortestPath(std::string spaceshipName, std::string planetAName, std::string planetBName);
 	void GetLeastExpensivePath(std::string spaceshipName, std::string planetAName, std::string planetBName);
 	void AddConflict(std::string allianceA, std::string allianceB);
-	void DisplayCurrentGameStatus();
+	void DisplayCurrentGameState();
 
 private:
 	Graph<Planet>* planets = nullptr;
 	std::vector<Spaceship>* spaceships = nullptr;
 
 	int GetPlanetIndex(std::string);
+	double GetDistance(std::pair<double, double> a, std::pair<double, double> b);
 };
