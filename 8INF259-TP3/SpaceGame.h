@@ -29,6 +29,5 @@ private:
 
 	std::vector<std::pair<std::string, std::string>>* conflicts = nullptr;
 
-	int GetPlanetIndex(std::string);
 	double GetDistance(std::pair<double, double> a, std::pair<double, double> b);
 };

@@ -116,14 +116,35 @@ void SpaceGame::GetLeastExpensivePath(std::string spaceshipName, std::string pla
 
 void SpaceGame::AddConflict(std::string allianceA, std::string allianceB)
 {
-	//TODO: For every planets of allianceA, remove their direct link with every planets of allianceB. Since the graph (this->planets) is undirected, we don't have to do it in both ways. (use planets.RemoveEdge(int, int, true), where ints are planet's indexes which you can find with this->GetPlanetIndex(std::string)))
-	//Don't forget output
 	std::cout << "    AddConflict\n        allianceA: " << allianceA << "\n        allianceB: " << allianceB << std::endl; //Debug
 
+	//Conflict names traker
 	if (this->conflicts == nullptr)
 		this->conflicts = new std::vector<std::pair<std::string, std::string>>();
 
 	this->conflicts->push_back(std::pair<std::string, std::string>(allianceA, allianceB));
+
+	//Now we update the actual graph
+	if (this->planets == nullptr || this->planets->nodes == nullptr || this->planets->nodes->size() < 1) 
+		return;
+
+	int i = 0;
+	for (auto &planet : *(this->planets->nodes)) //For each planet
+	{
+		if (planet.allianceName == allianceA) //In allianceA
+		{
+			int j = 0;
+			for (auto &planet2 : *(this->planets->nodes)) //For each planet
+			{
+				if (planet2.allianceName == allianceB) //In allianceB
+					this->planets->RemoveEdge(i, j); //Remove the edge that link them. We don't have to do it both ways since the graph is implemented unoriented-style and handle this internally.
+
+				j++;
+			}
+		}
+
+		i++;
+	}
 }
 
 void SpaceGame::DisplayCurrentGameState()
@@ -144,7 +165,7 @@ void SpaceGame::DisplayCurrentGameState()
 	{
 		i = 1;
 		for (auto &planet : *(this->planets->nodes))
-			std::cout << "        " << i++ << ". Name: " << planet.name << ", Location: [" << planet.location.first << ", " << planet.location.second << "], Population: " << planet.populationCount << ", Alliance: " << planet.allianceName << ", Fuel Price: " << planet.fuelPrice << std::endl;
+			std::cout << "        " << i++ << ". Name: " << planet.name << ", Location: (" << planet.location.first << ", " << planet.location.second << "), Population: " << planet.populationCount << ", Alliance: " << planet.allianceName << ", Fuel Price: " << planet.fuelPrice << std::endl;
 	}
 	else
 		std::cout << "None" << std::endl;
@@ -153,8 +174,8 @@ void SpaceGame::DisplayCurrentGameState()
 	if (this->conflicts != nullptr && this->conflicts->size() > 0)
 	{
 		i = 1;
-		for (auto& conflict : *(this->conflicts))
-			std::cout << i++ << ". " << conflict.first << " VS " << conflict.second << std::endl;
+		for (auto &conflict : *(this->conflicts))
+			std::cout << "        " << i++ << ". " << conflict.first << " VS " << conflict.second << std::endl;
 	}
 	else
 		std::cout << "None" << std::endl;
@@ -164,12 +185,6 @@ void SpaceGame::DisplayCurrentGameState()
 		std::cout << "    Planets adjacency matrix:" << std::endl; //TODO: Remove? Too much? Usefull for debug at least.
 		this->planets->PrintAdj();
 	}
-}
-
-int SpaceGame::GetPlanetIndex(std::string planetName)
-{
-	//TODO: Using a planet's name, find it's first occurence in this->planets.nodes
-	return 0;
 }
 
 double SpaceGame::GetDistance(std::pair<double, double> a, std::pair<double, double> b)
