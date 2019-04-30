@@ -182,8 +182,8 @@ void SpaceGame::DisplayCurrentGameState()
 	
 	if (this->planets != nullptr && this->planets->nodes != nullptr && this->planets->nodes->size() > 0)
 	{
-		std::cout << "    Planets adjacency matrix:" << std::endl; //TODO: Remove? Too much? Usefull for debug at least.
-		this->planets->PrintAdj();
+		std::cout << "    Planets adjacency matrix:" << std::endl;
+		this->planets->PrintAdj(false); //Debug: set to true for details
 	}
 }
 
