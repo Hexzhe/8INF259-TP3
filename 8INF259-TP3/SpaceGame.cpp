@@ -58,13 +58,6 @@ void SpaceGame::LoadPlanets(std::string path)
 
 void SpaceGame::LoadSpaceships(std::string path)
 {
-	//TODO: Load spaceships from path into a Spaceshil object, then add them to this->spaceships
-	//Don't forget output
-	std::cout << "    LoadSpaceships " << path << std::endl; //Debug
-
-
-
-
 	std::ifstream file(path);
 	if (file.fail())
 	{
@@ -73,6 +66,7 @@ void SpaceGame::LoadSpaceships(std::string path)
 	}
 
 	std::string line;
+	this->spaceships = new std::vector<Spaceship>();
 
 	std::cout << "    Loading spaceships..." << std::endl;
 	while (getline(file, line))
@@ -123,18 +117,36 @@ void SpaceGame::AddConflict(std::string allianceA, std::string allianceB)
 
 void SpaceGame::DisplayCurrentGameState()
 {
-	//TODO: Display everything; planets /w details, spaceships /w details and active conflicts ()
+	int i = 1;
+
 	std::cout << "    Loaded spaceship(s):" << std::endl;
-	//TODO: Display loaded spaceships with details
+	if (this->spaceships != nullptr && this->spaceships->size() > 0)
+	{
+		for (auto& spaceship : *(this->spaceships))
+			std::cout << "        " << i++ << ". Name: " << spaceship.name << ", Fuel Capacity: " << spaceship.fuelCapacity << std::endl;
+	}
+	else
+		std::cout << "None" << std::endl;
 
 	std::cout << "    Loaded planet(s):" << std::endl;
-	//TODO: Display loaded planets with details
+	if (this->planets != nullptr && this->planets->nodes != nullptr && this->planets->nodes->size() > 0)
+	{
+		i = 1;
+		for (auto& planet : *(this->planets->nodes))
+			std::cout << "        " << i++ << ". Name: " << planet.name << ", Location: [" << planet.location.first << ", " << planet.location.second << "], Population: " << planet.populationCount << ", Alliance: " << planet.allianceName << ", Fuel Price: " << planet.fuelPrice << std::endl;
+	}
+	else
+		std::cout << "None" << std::endl;
 
 	std::cout << "    Active conflict(s):" << std::endl;
 	//TODO: Display a list of active conflicts. For now there is no way to keep track of conflicts besite the adjMatrix so maybe we should keep the names of the alliances somewhere when we create a new conflict.
-
-	std::cout << "    Planets adjacency matrix:" << std::endl; //TODO: Remove? Too much? Usefull for debug at least.
-	this->planets->PrintAdj();
+	std::cout << "TODO" << std::endl;
+	
+	if (this->planets != nullptr && this->planets->nodes != nullptr && this->planets->nodes->size() > 0)
+	{
+		std::cout << "    Planets adjacency matrix:" << std::endl; //TODO: Remove? Too much? Usefull for debug at least.
+		this->planets->PrintAdj();
+	}
 }
 
 int SpaceGame::GetPlanetIndex(std::string planetName)
