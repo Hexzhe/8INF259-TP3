@@ -13,7 +13,7 @@ class SpaceGame
 {
 public:
 	SpaceGame();
-	~SpaceGame() {};
+	~SpaceGame();
 
 	void LoadPlanets(std::string path);
 	void LoadSpaceships(std::string path);
@@ -26,6 +26,8 @@ public:
 private:
 	Graph<Planet>* planets = nullptr;
 	std::vector<Spaceship>* spaceships = nullptr;
+
+	std::vector<std::pair<std::string, std::string>>* conflicts = nullptr;
 
 	int GetPlanetIndex(std::string);
 	double GetDistance(std::pair<double, double> a, std::pair<double, double> b);

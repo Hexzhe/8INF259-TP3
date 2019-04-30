@@ -6,6 +6,11 @@ SpaceGame::SpaceGame()
 	//TODO: Should we do something here? this->planets and this->spaceships are both initialized in LoadPlanets() and LoadSpaceships().
 }
 
+SpaceGame::~SpaceGame()
+{
+	delete planets, spaceships, conflicts;
+}
+
 void SpaceGame::LoadPlanets(std::string path)
 {
 	std::ifstream file(path);
@@ -37,6 +42,7 @@ void SpaceGame::LoadPlanets(std::string path)
 	file.close();
 
 	this->planets = new Graph<Planet>(*tmpPlanets);
+	this->conflicts = nullptr;
 
 	for (int i = 0; i < planets->nodes->size(); i++) //Setup edges
 	{
@@ -113,6 +119,11 @@ void SpaceGame::AddConflict(std::string allianceA, std::string allianceB)
 	//TODO: For every planets of allianceA, remove their direct link with every planets of allianceB. Since the graph (this->planets) is undirected, we don't have to do it in both ways. (use planets.RemoveEdge(int, int, true), where ints are planet's indexes which you can find with this->GetPlanetIndex(std::string)))
 	//Don't forget output
 	std::cout << "    AddConflict\n        allianceA: " << allianceA << "\n        allianceB: " << allianceB << std::endl; //Debug
+
+	if (this->conflicts == nullptr)
+		this->conflicts = new std::vector<std::pair<std::string, std::string>>();
+
+	this->conflicts->push_back(std::pair<std::string, std::string>(allianceA, allianceB));
 }
 
 void SpaceGame::DisplayCurrentGameState()
@@ -122,7 +133,7 @@ void SpaceGame::DisplayCurrentGameState()
 	std::cout << "    Loaded spaceship(s):" << std::endl;
 	if (this->spaceships != nullptr && this->spaceships->size() > 0)
 	{
-		for (auto& spaceship : *(this->spaceships))
+		for (auto &spaceship : *(this->spaceships))
 			std::cout << "        " << i++ << ". Name: " << spaceship.name << ", Fuel Capacity: " << spaceship.fuelCapacity << std::endl;
 	}
 	else
@@ -132,15 +143,21 @@ void SpaceGame::DisplayCurrentGameState()
 	if (this->planets != nullptr && this->planets->nodes != nullptr && this->planets->nodes->size() > 0)
 	{
 		i = 1;
-		for (auto& planet : *(this->planets->nodes))
+		for (auto &planet : *(this->planets->nodes))
 			std::cout << "        " << i++ << ". Name: " << planet.name << ", Location: [" << planet.location.first << ", " << planet.location.second << "], Population: " << planet.populationCount << ", Alliance: " << planet.allianceName << ", Fuel Price: " << planet.fuelPrice << std::endl;
 	}
 	else
 		std::cout << "None" << std::endl;
 
 	std::cout << "    Active conflict(s):" << std::endl;
-	//TODO: Display a list of active conflicts. For now there is no way to keep track of conflicts besite the adjMatrix so maybe we should keep the names of the alliances somewhere when we create a new conflict.
-	std::cout << "TODO" << std::endl;
+	if (this->conflicts != nullptr && this->conflicts->size() > 0)
+	{
+		i = 1;
+		for (auto& conflict : *(this->conflicts))
+			std::cout << i++ << ". " << conflict.first << " VS " << conflict.second << std::endl;
+	}
+	else
+		std::cout << "None" << std::endl;
 	
 	if (this->planets != nullptr && this->planets->nodes != nullptr && this->planets->nodes->size() > 0)
 	{
