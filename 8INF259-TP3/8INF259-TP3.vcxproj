@@ -176,10 +176,13 @@
   <ItemGroup>
     <Text Include="ResourceFiles\Data\Planetes_100.txt" />
     <Text Include="ResourceFiles\Data\Planetes_20.txt" />
+    <Text Include="ResourceFiles\Data\Planetes_Test.txt" />
     <Text Include="ResourceFiles\Data\Transactions_Complexes.txt" />
     <Text Include="ResourceFiles\Data\Transactions_Guerres.txt" />
     <Text Include="ResourceFiles\Data\Transactions_Simples.txt" />
+    <Text Include="ResourceFiles\Data\Transactions_Test.txt" />
     <Text Include="ResourceFiles\Data\Vaisseaux_4.txt" />
+    <Text Include="ResourceFiles\Data\Vaisseaux_Test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <list> 
 
 class SpaceGame
 {
@@ -30,4 +31,7 @@ private:
 	std::vector<std::pair<std::string, std::string>>* conflicts = nullptr;
 
 	double GetDistance(std::pair<double, double> a, std::pair<double, double> b);
+	bool DoesPathExist_Internal(int planetAIndex, int planetBIndex, double spaceshipFuelCapacity, bool* visited);
+	int GetPlanetIndex(std::string planetName);
+	Spaceship* GetSpaceshipByName(std::string spaceshipName);
 };

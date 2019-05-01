@@ -49,10 +49,7 @@ void SpaceGame::LoadPlanets(std::string path)
 		for (int j = 0; j < this->planets->nodes->size(); j++)
 		{
 			if (i == j) //Remove self-referencing edges
-			{
-				this->planets->RemoveEdge(i, j);
 				continue;
-			}
 
 			double distance = this->GetDistance((*(this->planets->nodes))[i].location, (*(this->planets->nodes))[j].location); //Edge weight is the distance between the two planets
 			this->planets->AddEdge(i, j, distance);
@@ -93,11 +90,36 @@ void SpaceGame::LoadSpaceships(std::string path)
 	std::cout << "Done! " << this->spaceships->size() << " spaceship(s) loaded" << std::endl;
 }
 
-void SpaceGame::DoesPathExist(std::string planetAName, std::string planetBName, std::string spaceshipName)
+void SpaceGame::DoesPathExist(std::string spaceshipName, std::string planetAName, std::string planetBName)
 {
-	//TODO: Using this->planets functions, check if a path exist between planetA and planetB for a specific spaceship. In theory there is almost always a direct path between each planet exept in case of conflict, but considering the fuel capacity of the spaceship we may have to jump from planet to planet to get fuel.
-	//Don't forget output
-	std::cout << "    DoesPathExist\n        planetAName: " << planetAName << "\n        planetBName: " << planetBName << "\n        spaceShipName: " << spaceshipName << std::endl; //Debug
+	std::cout << "    DoesPathExist? planetAName: " << planetAName << ", planetBName: " << planetBName << ", spaceShipName: " << spaceshipName << std::endl;
+
+	if (planetAName == "" || planetBName == "" || spaceshipName == ""
+		|| this->planets == nullptr || this->planets->nodes == nullptr || this->planets->nodes->size() < 1
+		|| this->spaceships == nullptr || this->spaceships->size() < 1)
+	{
+		std::cout << "        Error: there is either no spaceships or no planets loaded" << std::endl;
+		return;
+	}
+
+	int planetAIndex = this->GetPlanetIndex(planetAName);
+	int planetBIndex = this->GetPlanetIndex(planetBName);
+	Spaceship* spaceship = this->GetSpaceshipByName(spaceshipName);
+
+	if (planetAIndex < 0 || planetBIndex < 0 || spaceship == nullptr)
+	{
+		std::cout << "        Error: couldn't find either planetA, planetB or spaceship" << std::endl;
+		return;
+	}
+
+	double spaceshipFuelCapacity = spaceship->fuelCapacity;
+
+	bool* visited = new bool[this->planets->nodes->size()];
+	for (int i = 0; i < this->planets->nodes->size(); i++)
+		visited[i] = false;
+
+	std::cout << (this->DoesPathExist_Internal(planetAIndex, planetBIndex, spaceshipFuelCapacity, visited) ? "        Yes" : "        No") << std::endl;
+	delete visited;
 }
 
 void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetAName, std::string planetBName)
@@ -116,7 +138,11 @@ void SpaceGame::GetLeastExpensivePath(std::string spaceshipName, std::string pla
 
 void SpaceGame::AddConflict(std::string allianceA, std::string allianceB)
 {
-	std::cout << "    AddConflict\n        allianceA: " << allianceA << "\n        allianceB: " << allianceB << std::endl; //Debug
+	std::cout << "    AddConflict\n        allianceA: " << allianceA << "\n        allianceB: " << allianceB << std::endl;
+
+	if (allianceA == "" || allianceB == ""
+		|| this->planets == nullptr || this->planets->nodes == nullptr || this->planets->nodes->size() < 1)
+		return;
 
 	//Conflict names traker
 	if (this->conflicts == nullptr)
@@ -125,8 +151,6 @@ void SpaceGame::AddConflict(std::string allianceA, std::string allianceB)
 	this->conflicts->push_back(std::pair<std::string, std::string>(allianceA, allianceB));
 
 	//Now we update the actual graph
-	if (this->planets == nullptr || this->planets->nodes == nullptr || this->planets->nodes->size() < 1) 
-		return;
 
 	int i = 0;
 	for (auto &planet : *(this->planets->nodes)) //For each planet
@@ -158,7 +182,7 @@ void SpaceGame::DisplayCurrentGameState()
 			std::cout << "        " << i++ << ". Name: " << spaceship.name << ", Fuel Capacity: " << spaceship.fuelCapacity << std::endl;
 	}
 	else
-		std::cout << "None" << std::endl;
+		std::cout << "        None" << std::endl;
 
 	std::cout << "    Loaded planet(s):" << std::endl;
 	if (this->planets != nullptr && this->planets->nodes != nullptr && this->planets->nodes->size() > 0)
@@ -168,7 +192,7 @@ void SpaceGame::DisplayCurrentGameState()
 			std::cout << "        " << i++ << ". Name: " << planet.name << ", Location: (" << planet.location.first << ", " << planet.location.second << "), Population: " << planet.populationCount << ", Alliance: " << planet.allianceName << ", Fuel Price: " << planet.fuelPrice << std::endl;
 	}
 	else
-		std::cout << "None" << std::endl;
+		std::cout << "        None" << std::endl;
 
 	std::cout << "    Active conflict(s):" << std::endl;
 	if (this->conflicts != nullptr && this->conflicts->size() > 0)
@@ -178,7 +202,7 @@ void SpaceGame::DisplayCurrentGameState()
 			std::cout << "        " << i++ << ". " << conflict.first << " VS " << conflict.second << std::endl;
 	}
 	else
-		std::cout << "None" << std::endl;
+		std::cout << "        None" << std::endl;
 	
 	if (this->planets != nullptr && this->planets->nodes != nullptr && this->planets->nodes->size() > 0)
 	{
@@ -190,4 +214,63 @@ void SpaceGame::DisplayCurrentGameState()
 double SpaceGame::GetDistance(std::pair<double, double> a, std::pair<double, double> b)
 {
 	return round(sqrt(pow(b.first - a.first, 2) + pow(b.second - a.second, 2)) * 100) / 100;
+}
+
+bool SpaceGame::DoesPathExist_Internal(int planetAIndex, int planetBIndex, double spaceshipFuelCapacity, bool* visited)
+{
+	if (planetAIndex == planetBIndex)
+		return true;
+
+	visited[planetAIndex] = true;
+
+	bool allVisited = true;
+	for (int i = 0; i < this->planets->nodes->size(); i++)
+	{
+		if (!visited[i])
+		{
+			allVisited = false;
+			break;
+		}
+	}
+
+	if (allVisited)
+		return false;
+
+	//Next to visit
+	for (int i = 0; i < this->planets->nodes->size(); i++)
+	{
+		double x = this->planets->adj[planetAIndex][i];
+		if (this->planets->adj[planetAIndex][i] > -1 && this->planets->adj[planetAIndex][i] <= spaceshipFuelCapacity && !visited[i])
+		{
+			//oneVisited = true;
+			return this->DoesPathExist_Internal(i, planetBIndex, spaceshipFuelCapacity, visited);
+		}
+	}
+	
+	return false;
+}
+
+int SpaceGame::GetPlanetIndex(std::string planetName)
+{
+	int i = 0;
+	for (auto &planet : *(this->planets->nodes))
+	{
+		if (planet.name == planetName)
+			return i;
+
+		i++;
+	}
+
+	return -1;
+}
+
+Spaceship* SpaceGame::GetSpaceshipByName(std::string spaceshipName)
+{
+	for (auto &spaceship : *(this->spaceships))
+	{
+		if (spaceship.name == spaceshipName)
+			return &spaceship;
+	}
+
+	return nullptr;
 }

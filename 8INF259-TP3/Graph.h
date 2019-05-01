@@ -28,12 +28,13 @@ template<class T>
 Graph<T>::Graph(std::vector<T>& nodes)
 {
 	this->nodes = &nodes;
-	this->adj = new double* [(nodes.size())];
+	this->adj = new double* [nodes.size()];
 
-	for (int i = 0; i < (nodes.size()); i++)
+	for (int i = 0; i < nodes.size(); i++)
 	{
 		this->adj[i] = new double[this->nodes->size()];
-		memset(this->adj[i], 0, (nodes.size())*sizeof(double)); //No idea what's going on
+		for (int j = 0; j < nodes.size(); j++)
+			this->adj[i][j] = -1; //FIXME: No clue what's going on
 	}
 }
 
