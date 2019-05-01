@@ -21,7 +21,7 @@ void ProcessTransactionLine(std::string line, SpaceGame& game)
 
 	std::string transaction[4]; //max one instruction + 3 params, no spaces
 	std::istringstream iss(line);
-	for (int i = 0; iss.good() && i < 4; i++)
+	for (size_t i = 0; iss.good() && i < 4; i++)
 		iss >> transaction[i];
 
 	if (transaction[0] == "#P")

@@ -30,10 +30,10 @@ Graph<T>::Graph(std::vector<T>& nodes)
 	this->nodes = &nodes;
 	this->adj = new double* [nodes.size()];
 
-	for (int i = 0; i < nodes.size(); i++)
+	for (size_t i = 0; i < nodes.size(); i++)
 	{
 		this->adj[i] = new double[this->nodes->size()];
-		for (int j = 0; j < nodes.size(); j++)
+		for (size_t j = 0; j < nodes.size(); j++)
 			this->adj[i][j] = -1; //FIXME: No clue what's going on
 	}
 }
@@ -61,18 +61,18 @@ void Graph<T>::RemoveEdge(int indexA, int indexB)
 template<class T>
 void Graph<T>::PrintAdj(bool detailed)
 {
-	for (int y = 0; y < this->nodes->size(); y++)
+	for (size_t y = 0; y < this->nodes->size(); y++)
 	{
 		std::cout << "        " << std::flush;
 
 		if (detailed)
 		{
-			for (int x = 0; x < this->nodes->size(); x++)
+			for (size_t x = 0; x < this->nodes->size(); x++)
 				std::cout << std::setw(6) << this->adj[x][y] << " ";
 		}
 		else
 		{
-			for (int x = 0; x < this->nodes->size(); x++)
+			for (size_t x = 0; x < this->nodes->size(); x++)
 				std::cout << (this->adj[x][y] == -1 ? " " : "X") << " ";
 		}
 

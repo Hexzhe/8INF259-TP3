@@ -44,9 +44,9 @@ void SpaceGame::LoadPlanets(std::string path)
 	this->planets = new Graph<Planet>(*tmpPlanets);
 	this->conflicts = nullptr;
 
-	for (int i = 0; i < planets->nodes->size(); i++) //Setup edges
+	for (size_t i = 0; i < planets->nodes->size(); i++) //Setup edges
 	{
-		for (int j = 0; j < this->planets->nodes->size(); j++)
+		for (size_t j = 0; j < this->planets->nodes->size(); j++)
 		{
 			if (i == j) //Remove self-referencing edges
 				continue;
@@ -115,7 +115,7 @@ void SpaceGame::DoesPathExist(std::string spaceshipName, std::string planetAName
 	double spaceshipFuelCapacity = spaceship->fuelCapacity;
 
 	bool* visited = new bool[this->planets->nodes->size()];
-	for (int i = 0; i < this->planets->nodes->size(); i++)
+	for (size_t i = 0; i < this->planets->nodes->size(); i++)
 		visited[i] = false;
 
 	std::cout << (this->DoesPathExist_Internal(planetAIndex, planetBIndex, spaceshipFuelCapacity, visited) ? "        Yes" : "        No") << std::endl;
@@ -224,7 +224,7 @@ bool SpaceGame::DoesPathExist_Internal(int planetAIndex, int planetBIndex, doubl
 	visited[planetAIndex] = true;
 
 	bool allVisited = true;
-	for (int i = 0; i < this->planets->nodes->size(); i++)
+	for (size_t i = 0; i < this->planets->nodes->size(); i++)
 	{
 		if (!visited[i])
 		{
@@ -237,7 +237,7 @@ bool SpaceGame::DoesPathExist_Internal(int planetAIndex, int planetBIndex, doubl
 		return false;
 
 	//Next to visit
-	for (int i = 0; i < this->planets->nodes->size(); i++)
+	for (size_t i = 0; i < this->planets->nodes->size(); i++)
 	{
 		double x = this->planets->adj[planetAIndex][i];
 		if (this->planets->adj[planetAIndex][i] > -1 && this->planets->adj[planetAIndex][i] <= spaceshipFuelCapacity && !visited[i])
