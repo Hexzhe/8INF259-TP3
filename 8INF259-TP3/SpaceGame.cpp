@@ -119,7 +119,7 @@ void SpaceGame::DoesPathExist(std::string spaceshipName, std::string planetAName
 		visited[i] = false;
 
 	std::cout << (this->DoesPathExist_Internal(planetAIndex, planetBIndex, spaceshipFuelCapacity, visited) ? "        Yes" : "        No") << std::endl;
-	delete visited;
+	delete[] visited;
 }
 
 void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetAName, std::string planetBName)
