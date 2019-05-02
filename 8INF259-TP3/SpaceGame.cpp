@@ -112,16 +112,13 @@ void SpaceGame::DoesPathExist(std::string spaceshipName, std::string planetAName
 		return;
 	}
 
-	double spaceshipFuelCapacity = spaceship->fuelCapacity;
-
 	bool* visited = new bool[this->planets->nodes->size()];
 	for (size_t i = 0; i < this->planets->nodes->size(); i++)
 		visited[i] = false;
 
-	std::cout << (this->DoesPathExist_Internal(planetAIndex, planetBIndex, spaceshipFuelCapacity, visited) ? "        Yes" : "        No") << std::endl;
+	std::cout << (this->DoesPathExist_Internal(planetAIndex, planetBIndex, spaceship->fuelCapacity, visited) ? "        Yes" : "        No") << std::endl;
 
 	delete[] visited;
-	delete spaceship;
 }
 
 void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetAName, std::string planetBName)
