@@ -123,7 +123,7 @@ void SpaceGame::DoesPathExist(std::string spaceshipName, std::string planetAName
 
 void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetAName, std::string planetBName)
 {
-	std::cout << "    GetShortestPath\n        spaceshipName: " << spaceshipName << "\n        planetAName: " << planetAName << "\n        planetBName: " << planetBName << std::endl;
+	std::cout << "    GetShortestPath; planetAName: " << planetAName << ", planetBName: " << planetBName << ", spaceShipName: " << spaceshipName << std::endl;
 
 	if (planetAName == "" || planetBName == "" || spaceshipName == ""
 		|| this->planets == nullptr || this->planets->nodes == nullptr || this->planets->nodes->size() < 1
@@ -151,6 +151,15 @@ void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetANa
 	for (size_t i = 0; i < this->planets->nodes->size(); i++)
 		visited[i] = false;
 
+	int** path = new int* [this->planets->nodes->size()];
+
+	for (size_t i = 0; i < this->planets->nodes->size(); i++)
+	{
+		path[i] = new int[this->planets->nodes->size()];
+		for (size_t j = 0; j < this->planets->nodes->size(); j++)
+			path[i][j] = -1;
+	}
+
 	dist[planetAIndex] = 0;
 
 	for (size_t i = 0; i < this->planets->nodes->size() - 1; i++)
@@ -174,12 +183,15 @@ void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetANa
 			{
 				dist[j] = -1;
 			}
+
+		    if (!visited[j] && closestNodeIndex > -1)
+				path[j][i] = closestNodeIndex; //TODO: Make sure this work properly
 		}
 	}
 
 	//Debug: Print every results
-	//for (int i = 0; i < this->planets->nodes->size(); i++)
-	//	std::cout << "        " << planetAIndex << " to " << i << ": " << dist[i] << std::endl;
+	for (int i = 0; i < this->planets->nodes->size(); i++)
+		std::cout << "        " << planetAIndex << " to " << i << ": " << dist[i] << std::endl;
 
 	if (dist[planetBIndex] < 0)
 	{
@@ -187,13 +199,36 @@ void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetANa
 		return;
 	}
 
-	//TODO: Display full path from A to B
+	//Debug: Print every paths
+	for (size_t y = 0; y < this->planets->nodes->size(); y++)
+	{
+		std::cout << "        " << std::flush;
+
+		for (size_t x = 0; x < this->planets->nodes->size(); x++)
+			std::cout << std::setw(3) << path[x][y] << " "; //TODO: Display planet name instead of index
+
+		std::cout << std::endl;
+	}
+
+	/*std::cout << "        Distance from A to B: " << dist[planetBIndex] << std::endl;
+	std::cout << "        Path: " << std::flush;
+	for (size_t i = 0; i < this->planets->nodes->size(); i++)
+	{ 
+		if (path[planetBIndex][i] > -1)
+			std::cout << path[planetBIndex][i] << "-> " << std::flush;
+		else
+		{
+			std::cout << planetBIndex << std::endl;
+			break;
+		}
+	}*/
 }
 
 void SpaceGame::GetLeastExpensivePath(std::string spaceshipName, std::string planetAName, std::string planetBName)
 {
 	//TODO: For a specific spaceship, get the least expensive path (least fuel cost, considering spaceship's fuel capacity) between planetA and planetB
 	//Don't forget output
+	//Copy GetShortestPath() and find a way to do a check on distance*fuelPrice instead of just distance
 	std::cout << "    GetLeastExpensivePath\n        spaceshipName: " << spaceshipName << "\n        planetAName: " << planetAName << "\n        planetBName: " << planetBName << std::endl; //Debug
 }
 

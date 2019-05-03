@@ -2,7 +2,7 @@
 * Titre: Vitesse spatiale (8INF259\TP3)
 * Auteur(e)s: Dominique Boivin (BOID31609701)
 *             Jason Gilbert (GILJ05069703)
-* Date: 2019-04-30
+* Date: 2019-05-02
 * Description:
 * TODO: Target VS2017
 *******************************************************************/
