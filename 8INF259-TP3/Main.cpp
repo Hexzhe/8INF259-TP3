@@ -2,9 +2,21 @@
 * Titre: Vitesse spatiale (8INF259\TP3)
 * Auteur(e)s: Dominique Boivin (BOID31609701)
 *             Jason Gilbert (GILJ05069703)
-* Date: 2019-05-02
-* Description:
-* TODO: Target VS2017
+* Date: 2019-05-03
+* Description: L'annonce du prochain jeu vidéo de la populaire série 
+*		«Vitesse Spatiale»fait sensation dans le monde  des  jeux  vidéos.
+*		Il  s'agit  d'un jeude  simulation où lejoueur  doit  faire  la
+*		gestion  dutransport spatial entre les planètes d'un lointain
+*		système stellaire. Le joueur doit ainsi minimiser les  coûts  de
+*		sa  flotte  de  vaisseau  spatial  en  optimisant  les  routes
+*		de  transport  et  ainsi  gagner plus  d'argent  pour  s'acheter
+*		de  meilleur  vaisseau...Maisattention,  les  conflits  entre
+*		les différentes nations viendront  compliquer les chosesdans ce
+*		jeu de  simulation spatiopolitique!
+* Note: La solution a été developpé sur VS2019 avec le c++ toolset v142.
+*		J'ai essayé de retarget du mieux que j'ai pu vers v141 (VS2017).
+*		J'espère que ca va marcher, sinon vous pouvez essayer de jouer
+*		dans les settings du projet :/
 *******************************************************************/
 
 #include "pch.h"
