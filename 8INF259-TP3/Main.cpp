@@ -55,7 +55,7 @@ int main()
 		std::cin >> menuChoice;
 		std::cin.clear(); std::cin.ignore(INT_MAX, '\n');
 
-		if (menuChoice == 1) //TODO: split in functions maybe
+		if (menuChoice == 1)
 		{
 			std::cout << "\nFile mode" << std::endl;
 

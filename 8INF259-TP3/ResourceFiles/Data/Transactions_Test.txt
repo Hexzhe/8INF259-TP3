@@ -1,6 +1,6 @@
-#P ResourceFiles/Data/Planetes_20.txt
-#V ResourceFiles/Data/Vaisseaux_4.txt
+#P ResourceFiles/Data/Planetes_test.txt
+#V ResourceFiles/Data/Vaisseaux_test.txt
 &
-?1 TURBO-TITAN-Y Delta_7 Delta_18
-?2 TURBO-TITAN-Y Delta_7 Delta_18
-?3 TURBO-TITAN-Y Delta_7 Delta_18
+?1 SUPP-ID100-WP Delta_7 Delta_17
+?2 SUPP-ID100-WP Delta_7 Delta_17
+?3 SUPP-ID100-WP Delta_7 Delta_17

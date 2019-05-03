@@ -21,7 +21,7 @@ public:
 template<class T>
 Graph<T>::Graph()
 {
-	//TODO: Shouldn't be used, but still
+	
 }
 
 template<class T>
@@ -34,7 +34,7 @@ Graph<T>::Graph(std::vector<T>& nodes)
 	{
 		this->adj[i] = new double[this->nodes->size()];
 		for (size_t j = 0; j < nodes.size(); j++)
-			this->adj[i][j] = -1;
+			this->adj[i][j] = 0;
 	}
 }
 
@@ -54,8 +54,8 @@ void Graph<T>::AddEdge(int indexA, int indexB, double weight)
 template<class T>
 void Graph<T>::RemoveEdge(int indexA, int indexB)
 {
-	this->adj[indexA][indexB] = -1;
-	this->adj[indexB][indexA] = -1;
+	this->adj[indexA][indexB] = 0;
+	this->adj[indexB][indexA] = 0;
 }
 
 template<class T>
@@ -73,7 +73,7 @@ void Graph<T>::PrintAdj(bool detailed)
 		else
 		{
 			for (size_t x = 0; x < this->nodes->size(); x++)
-				std::cout << (this->adj[x][y] == -1 ? " " : "X") << " ";
+				std::cout << (this->adj[x][y] == 0 ? " " : "X") << " ";
 		}
 
 		std::cout << std::endl;

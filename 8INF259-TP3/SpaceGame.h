@@ -34,5 +34,7 @@ private:
 	bool DoesPathExist_Internal(int planetAIndex, int planetBIndex, double spaceshipFuelCapacity, bool* visited);
 	int GetPlanetIndex(std::string planetName);
 	double GetSpaceshipFuelCapacity(std::string spaceshipName);
-	int GetClosestNodeIndex(double* dist, bool* visited, double maximumDistance);
+	int GetClosestNodeIndex(double* dist, bool* visited);
+	void PrintPath(int* parent, int i);
+	std::string GetPlanetName(int i);
 };
