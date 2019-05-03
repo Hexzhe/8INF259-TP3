@@ -37,4 +37,6 @@ private:
 	int GetClosestNodeIndex(double* dist, bool* visited);
 	void PrintPath(int* parent, int i);
 	std::string GetPlanetName(int i);
+
+	int COUNT;
 };
