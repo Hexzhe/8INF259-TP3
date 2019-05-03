@@ -104,9 +104,9 @@ void SpaceGame::DoesPathExist(std::string spaceshipName, std::string planetAName
 
 	int planetAIndex = this->GetPlanetIndex(planetAName);
 	int planetBIndex = this->GetPlanetIndex(planetBName);
-	Spaceship* spaceship = this->GetSpaceshipByName(spaceshipName);
+	double spaceshipFuelCapacity = this->GetSpaceshipFuelCapacity(spaceshipName);
 
-	if (planetAIndex < 0 || planetBIndex < 0 || spaceship == nullptr)
+	if (planetAIndex < 0 || planetBIndex < 0 || spaceshipFuelCapacity < 0)
 	{
 		std::cout << "        Error: couldn't find either planetA, planetB or spaceship" << std::endl;
 		return;
@@ -116,16 +116,58 @@ void SpaceGame::DoesPathExist(std::string spaceshipName, std::string planetAName
 	for (size_t i = 0; i < this->planets->nodes->size(); i++)
 		visited[i] = false;
 
-	std::cout << (this->DoesPathExist_Internal(planetAIndex, planetBIndex, spaceship->fuelCapacity, visited) ? "        Yes" : "        No") << std::endl;
+	std::cout << (this->DoesPathExist_Internal(planetAIndex, planetBIndex, spaceshipFuelCapacity, visited) ? "        Yes" : "        No") << std::endl;
 
 	delete[] visited;
 }
 
 void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetAName, std::string planetBName)
 {
-	//TODO: For a specific spaceship, get the shortest path (least distance between planets, considering spaceship's fuel capacity) between planetA and planetB
-	//Don't forget output
-	std::cout << "    GetShortestPath\n        spaceshipName: " << spaceshipName << "\n        planetAName: " << planetAName << "\n        planetBName: " << planetBName << std::endl; //Debug
+	std::cout << "    GetShortestPath\n        spaceshipName: " << spaceshipName << "\n        planetAName: " << planetAName << "\n        planetBName: " << planetBName << std::endl; //Debug`
+
+	double spaceshipFuelCapacity = this->GetSpaceshipFuelCapacity(spaceshipName);
+	int planetAIndex = this->GetPlanetIndex(planetAName);
+	int planetBIndex = this->GetPlanetIndex(planetBName);
+
+	double* dist = new double[this->planets->nodes->size()];
+	for (size_t i = 0; i < this->planets->nodes->size(); i++)
+		dist[i] = DBL_MAX; //No path found yet
+
+	bool* visited = new bool[this->planets->nodes->size()];
+	for (size_t i = 0; i < this->planets->nodes->size(); i++)
+		visited[i] = false;
+
+	dist[planetAIndex] = 0;
+
+	for (size_t i = 0; i < this->planets->nodes->size() - 1; i++)
+	{
+		int closestNodeIndex = this->GetClosestNodeIndex(dist, visited, spaceshipFuelCapacity);
+
+		visited[closestNodeIndex] = true;
+
+		for (size_t j = 0; j < this->planets->nodes->size(); j++)
+		{
+			if (!visited[j]
+				&& closestNodeIndex > -1
+				&& this->planets->adj[closestNodeIndex][j] > -1
+				&& dist[closestNodeIndex] != DBL_MAX
+				&& dist[closestNodeIndex] + this->planets->adj[closestNodeIndex][j] < dist[j])
+			{
+				dist[j] = dist[closestNodeIndex] + this->planets->adj[closestNodeIndex][j];
+			}
+			else if (!visited[j]
+				&& closestNodeIndex < 0) //Can't reach next node
+			{
+				dist[j] = -1;
+			}
+		}
+	}
+
+	//Debug: Print every results
+	for (int i = 0; i < this->planets->nodes->size(); i++)
+		std::cout << "        " << planetAIndex << " to " << i << ": " << dist[i] << std::endl;
+
+	//TODO: Display full path from A to B
 }
 
 void SpaceGame::GetLeastExpensivePath(std::string spaceshipName, std::string planetAName, std::string planetBName)
@@ -206,7 +248,7 @@ void SpaceGame::DisplayCurrentGameState()
 	if (this->planets != nullptr && this->planets->nodes != nullptr && this->planets->nodes->size() > 0)
 	{
 		std::cout << "    Planets adjacency matrix:" << std::endl;
-		this->planets->PrintAdj(false); //Debug: set to true for details
+		this->planets->PrintAdj(true); //Debug: set to true for details
 	}
 }
 
@@ -263,13 +305,32 @@ int SpaceGame::GetPlanetIndex(std::string planetName)
 	return -1;
 }
 
-Spaceship* SpaceGame::GetSpaceshipByName(std::string spaceshipName)
+double SpaceGame::GetSpaceshipFuelCapacity(std::string spaceshipName)
 {
 	for (auto &spaceship : *(this->spaceships))
 	{
 		if (spaceship.name == spaceshipName)
-			return &spaceship;
+			return spaceship.fuelCapacity;
 	}
 
-	return nullptr;
+	return -1;
+}
+
+int SpaceGame::GetClosestNodeIndex(double* dist, bool* visited, double maximumDistance)
+{
+	int minIndex = -1;
+	double min = DBL_MAX;
+
+	for (size_t i = 0; i < this->planets->nodes->size(); i++)
+	{
+		if (!visited[i]
+			&& dist[i] <= min
+			&& dist[i] <= maximumDistance)
+		{
+			min = dist[i];
+			minIndex = i;
+		}
+	}
+
+	return minIndex;
 }

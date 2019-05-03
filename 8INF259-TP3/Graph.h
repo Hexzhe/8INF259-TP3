@@ -34,7 +34,7 @@ Graph<T>::Graph(std::vector<T>& nodes)
 	{
 		this->adj[i] = new double[this->nodes->size()];
 		for (size_t j = 0; j < nodes.size(); j++)
-			this->adj[i][j] = -1; //FIXME: No clue what's going on
+			this->adj[i][j] = -1;
 	}
 }
 

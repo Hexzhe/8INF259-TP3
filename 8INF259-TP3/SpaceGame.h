@@ -33,5 +33,6 @@ private:
 	double GetDistance(std::pair<double, double> a, std::pair<double, double> b);
 	bool DoesPathExist_Internal(int planetAIndex, int planetBIndex, double spaceshipFuelCapacity, bool* visited);
 	int GetPlanetIndex(std::string planetName);
-	Spaceship* GetSpaceshipByName(std::string spaceshipName);
+	double GetSpaceshipFuelCapacity(std::string spaceshipName);
+	int GetClosestNodeIndex(double* dist, bool* visited, double maximumDistance);
 };
