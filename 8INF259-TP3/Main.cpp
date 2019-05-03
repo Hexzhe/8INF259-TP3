@@ -33,7 +33,7 @@ void ProcessTransactionLine(std::string line, SpaceGame& game)
 	else if (transaction[0] == "?2")
 		game.GetShortestPath(transaction[1], transaction[2], transaction[3]);
 	else if (transaction[0] == "?3")
-		game.GetLeastExpensivePath(transaction[1], transaction[2], transaction[3]);
+		game.GetCheapestPath(transaction[1], transaction[2], transaction[3]);
 	else if (transaction[0] == "/")
 		game.AddConflict(transaction[1], transaction[2]);
 	else if (transaction[0] == "&")

@@ -15,7 +15,6 @@ public:
 
 	void AddEdge(int indexA, int indexB, double weight);
 	void RemoveEdge(int indexA, int indexB);
-	void PrintAdj(bool detailed);
 };
 
 template<class T>
@@ -56,26 +55,4 @@ void Graph<T>::RemoveEdge(int indexA, int indexB)
 {
 	this->adj[indexA][indexB] = 0;
 	this->adj[indexB][indexA] = 0;
-}
-
-template<class T>
-void Graph<T>::PrintAdj(bool detailed)
-{
-	for (size_t y = 0; y < this->nodes->size(); y++)
-	{
-		std::cout << "        " << std::flush;
-
-		if (detailed)
-		{
-			for (size_t x = 0; x < this->nodes->size(); x++)
-				std::cout << std::setw(6) << this->adj[x][y] << " ";
-		}
-		else
-		{
-			for (size_t x = 0; x < this->nodes->size(); x++)
-				std::cout << (this->adj[x][y] == 0 ? " " : "X") << " ";
-		}
-
-		std::cout << std::endl;
-	}
 }

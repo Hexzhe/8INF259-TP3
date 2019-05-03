@@ -57,7 +57,7 @@ void SpaceGame::LoadPlanets(std::string path)
 	}
 
 	this->COUNT = this->planets->nodes->size();
-	std::cout << "Done! " << COUNT << " planet(s) loaded" << std::endl;
+	std::cout << "        Done! " << COUNT << " planet(s) loaded" << std::endl;
 }
 
 void SpaceGame::LoadSpaceships(std::string path)
@@ -88,7 +88,7 @@ void SpaceGame::LoadSpaceships(std::string path)
 	}
 	file.close();
 
-	std::cout << "Done! " << this->spaceships->size() << " spaceship(s) loaded" << std::endl;
+	std::cout << "        Done! " << this->spaceships->size() << " spaceship(s) loaded" << std::endl;
 }
 
 void SpaceGame::DoesPathExist(std::string spaceshipName, std::string planetAName, std::string planetBName)
@@ -128,7 +128,8 @@ void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetANa
 	int planetBIndex = this->GetPlanetIndex(planetBName);
 	double spaceshipFuelCapacity = this->GetSpaceshipFuelCapacity(spaceshipName);
 
-	std::cout << "    GetShortestPath; planetAName: " << planetAName << " (" << planetAIndex << "), planetBName: " << planetBName << " (" << planetBIndex << "), spaceShipName: " << spaceshipName << " (" << spaceshipFuelCapacity << ")" << std::endl;
+	std::cout << "    GetshortestPath" << std::endl;
+	std::cout << "        planetAName: " << planetAName << " (" << planetAIndex << "), planetBName: " << planetBName << " (" << planetBIndex << "), spaceShipName: " << spaceshipName << " (" << spaceshipFuelCapacity << ")" << std::endl;
 
 	if (planetAName == "" || planetBName == "" || spaceshipName == ""
 		|| this->planets == nullptr || this->planets->nodes == nullptr || COUNT < 1
@@ -195,12 +196,78 @@ void SpaceGame::GetShortestPath(std::string spaceshipName, std::string planetANa
 	delete[] dist, visited, parent;
 }
 
-void SpaceGame::GetLeastExpensivePath(std::string spaceshipName, std::string planetAName, std::string planetBName)
+void SpaceGame::GetCheapestPath(std::string spaceshipName, std::string planetAName, std::string planetBName)
 {
-	//TODO: For a specific spaceship, get the least expensive path (least fuel cost, considering spaceship's fuel capacity) between planetA and planetB
-	//Don't forget output
-	//Copy GetShortestPath() and find a way to do a check on distance*fuelPrice instead of just distance
-	std::cout << "    GetLeastExpensivePath\n        spaceshipName: " << spaceshipName << "\n        planetAName: " << planetAName << "\n        planetBName: " << planetBName << std::endl; //Debug
+	int planetAIndex = this->GetPlanetIndex(planetAName);
+	int planetBIndex = this->GetPlanetIndex(planetBName);
+	double spaceshipFuelCapacity = this->GetSpaceshipFuelCapacity(spaceshipName);
+
+	std::cout << "    GetCheapestPath" << std::endl;
+	std::cout << "        planetAName: " << planetAName << " (" << planetAIndex << "), planetBName: " << planetBName << " (" << planetBIndex << "), spaceShipName: " << spaceshipName << " (" << spaceshipFuelCapacity << ")" << std::endl;
+
+	if (planetAName == "" || planetBName == "" || spaceshipName == ""
+		|| this->planets == nullptr || this->planets->nodes == nullptr || COUNT < 1
+		|| this->spaceships == nullptr || this->spaceships->size() < 1)
+	{
+		std::cout << "        Error: there is either no spaceships or no planets loaded" << std::endl;
+		return;
+	}
+
+	if (planetAIndex < 0 || planetBIndex < 0 || spaceshipFuelCapacity < 0)
+	{
+		std::cout << "        Error: couldn't find either planetA, planetB or spaceship" << std::endl;
+		return;
+	}
+
+	bool* visited = new bool[COUNT];
+	for (size_t i = 0; i < COUNT; i++)
+		visited[i] = false;
+
+	if (!this->DoesPathExist_Internal(planetAIndex, planetBIndex, spaceshipFuelCapacity, visited))
+	{
+		std::cout << "        Error: There is no path available between planetA and planetB" << std::endl;
+		return;
+	}
+	delete[] visited;
+
+	double* cost = new double[COUNT];
+	visited = new bool[COUNT];
+	int* parent = new int[COUNT];
+
+	parent[planetAIndex] = -1;
+
+	for (size_t i = 0; i < COUNT; i++)
+	{
+		cost[i] = DBL_MAX;
+		visited[i] = false;
+	}
+
+	cost[planetAIndex] = 0;
+
+	for (size_t i = 0; i < COUNT - 1; i++)
+	{
+		int closestNodeIndex = this->GetClosestNodeIndex(cost, visited);
+		visited[closestNodeIndex] = true;
+
+		for (size_t j = 0; j < COUNT; j++)
+		{
+			if (!visited[j]
+				&& this->planets->adj[closestNodeIndex][j]
+				&& cost[closestNodeIndex] + (this->planets->adj[closestNodeIndex][j] * this->GetPlanetFuelPrice(j)) < cost[j]
+				&& this->planets->adj[closestNodeIndex][j] <= spaceshipFuelCapacity)
+			{
+				cost[j] = cost[closestNodeIndex] + (this->planets->adj[closestNodeIndex][j] * this->GetPlanetFuelPrice(j));
+				parent[j] = closestNodeIndex;
+			}
+		}
+	}
+
+	std::cout << "        Cost: " << cost[planetBIndex] << std::endl;
+	std::cout << "        Path: " << this->GetPlanetName(planetAIndex) << " (" << planetAIndex << ")" << std::flush;
+	this->PrintPath(parent, planetBIndex);
+	std::cout << std::endl;
+
+	delete[] cost, visited, parent;
 }
 
 void SpaceGame::AddConflict(std::string allianceA, std::string allianceB)
@@ -245,7 +312,7 @@ void SpaceGame::DisplayCurrentGameState()
 	std::cout << "    Loaded spaceship(s):" << std::endl;
 	if (this->spaceships != nullptr && this->spaceships->size() > 0)
 	{
-		for (auto &spaceship : *(this->spaceships))
+		for (auto& spaceship : *(this->spaceships))
 			std::cout << "        " << i++ << ". Name: " << spaceship.name << ", Fuel Capacity: " << spaceship.fuelCapacity << std::endl;
 	}
 	else
@@ -255,7 +322,7 @@ void SpaceGame::DisplayCurrentGameState()
 	if (this->planets != nullptr && this->planets->nodes != nullptr && COUNT > 0)
 	{
 		i = 1;
-		for (auto &planet : *(this->planets->nodes))
+		for (auto& planet : *(this->planets->nodes))
 			std::cout << "        " << i++ << ". Name: " << planet.name << ", Location: (" << planet.location.first << ", " << planet.location.second << "), Population: " << planet.populationCount << ", Alliance: " << planet.allianceName << ", Fuel Price: " << planet.fuelPrice << std::endl;
 	}
 	else
@@ -270,12 +337,6 @@ void SpaceGame::DisplayCurrentGameState()
 	}
 	else
 		std::cout << "        None" << std::endl;
-	
-	if (this->planets != nullptr && this->planets->nodes != nullptr && COUNT > 0)
-	{
-		std::cout << "    Planets adjacency matrix:" << std::endl;
-		this->planets->PrintAdj(false); //Debug: set to true for details
-	}
 }
 
 double SpaceGame::GetDistance(std::pair<double, double> a, std::pair<double, double> b)
@@ -366,4 +427,12 @@ std::string SpaceGame::GetPlanetName(int i)
 		return "?";
 
 	return this->planets->nodes->at(i).name;
+}
+
+double SpaceGame::GetPlanetFuelPrice(int i)
+{
+	if (i >= COUNT)
+		return -1;
+
+	return this->planets->nodes->at(i).fuelPrice;
 }

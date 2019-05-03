@@ -20,7 +20,7 @@ public:
 	void LoadSpaceships(std::string path);
 	void DoesPathExist(std::string spaceshipName, std::string planetAName, std::string planetBName);
 	void GetShortestPath(std::string spaceshipName, std::string planetAName, std::string planetBName);
-	void GetLeastExpensivePath(std::string spaceshipName, std::string planetAName, std::string planetBName);
+	void GetCheapestPath(std::string spaceshipName, std::string planetAName, std::string planetBName);
 	void AddConflict(std::string allianceA, std::string allianceB);
 	void DisplayCurrentGameState();
 
@@ -37,6 +37,7 @@ private:
 	int GetClosestNodeIndex(double* dist, bool* visited);
 	void PrintPath(int* parent, int i);
 	std::string GetPlanetName(int i);
+	double GetPlanetFuelPrice(int i);
 
-	int COUNT;
+	int COUNT = 0;
 };
